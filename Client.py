@@ -10,14 +10,25 @@ root = configdata.getroot()
 
 def chooseAd(keywords):
     keywordList = str(keywords['keywords']).split()
-    matches = [ ]
-    print (keywordList)
+    match = {"Ad": "", "Value": 0}
     for child in root:
-        print(child.attrib['name'])
         if child.attrib['name'] in keywordList:
-            matches.append(child.attrib['name'])
 
-    print(matches)
+            value = ""
+            ad = ""
+
+            for attribute in child:
+                if attribute.tag == 'value':
+                    value = attribute.text
+
+                if attribute.tag == "ad":
+                    ad = attribute.text
+
+            if int(value) > int(match["Value"]):
+                match["Ad"] = ad
+                match["Value"] = value
+
+    return match["Ad"]
 
 @app.route('/')
 def client():
@@ -34,7 +45,7 @@ def handle_connection(methods=['GET']):
 def handle_custom_event(json, methods=['GET', 'POST']):
     print('recieved keywords: ' + str(json))
     response = chooseAd(json)
-    socketio.emit('my response', json, callback=messageRecieved)
+    socketio.emit('my response', response, callback=messageRecieved)
 
 if __name__ == '__main__':
   socketio.run(app, debug=True)

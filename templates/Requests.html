@@ -7,7 +7,8 @@
     <form action="" method="POST">
       <input type="text" class="keywords" placeholder="Enter Keyword"/>
       <input type="submit"/>
-    <div name="advert"></div>
+    </form>
+    <div id="advert"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
@@ -23,13 +24,12 @@
           socket.emit( 'keywords recieved', {
             keywords : keywords
           })
-          $( 'input.keywords' ).val( '' ).focus()
         })
       })
 
       socket.on ( 'my response', function( msg ) {
-        alert('Response recieved');
-        $( 'div.advert' ).append( '<img>' + msg.adurl + '</img>' )
+        alert(msg);
+        $('#advert').append($('<img>',{src:msg}))
       })
     </script>
   </body>
