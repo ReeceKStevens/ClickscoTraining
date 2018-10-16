@@ -16,9 +16,7 @@
       var socket = io.connect('http://' + document.domain + ':' + location.port);
 
       socket.on( 'connect', function() {
-        socket.emit( 'keywords recieved', {
-          data: 'User Connected'
-        })
+        socket.emit( 'connection established')
         var form = $( 'form' ).on( 'submit', function(e) {
           e.preventDefault()
           let keywords = $( 'input.keywords' ).val()
@@ -28,7 +26,9 @@
           $( 'input.keywords' ).val( '' ).focus()
         })
       })
+
       socket.on ( 'my response', function( msg ) {
+        alert('Response recieved');
         $( 'div.advert' ).append( '<img>' + msg.adurl + '</img>' )
       })
     </script>
