@@ -5,15 +5,33 @@
   <body>
     <h2>Make a request:</h2>
     <!--Basic form to post user input back to server-->
-    <form action="" method="POST">
+    <form action="/" method="POST">
       <input name="keyinput" type="text" class="keywords" placeholder="Enter Keyword"/>
       <input type="submit"/>
     </form>
     <!--Checks the ad variable, if it is null display a default image, else use the url in ad-->
-    {% if ad %}
-      <img src = {{ ad }} />
+    {% if ad1 %}
+      <img src = {{ ad1 }} />
     {% else %}
       <img src ='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/220px-Good_Food_Display_-_NCI_Visuals_Online.jpg'/>
     {% endif %}
+    <img id = "ad2"/>
+    <!--Script required to use jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type=text/javascript>
+      if ('{{words}}' != '') {
+        //Function to trigger on page load
+        $(function() {
+            $.post('/secondAD',
+            {
+              keywords: '{{words}}'
+            },
+            function(AdURL){
+              history.pushState(null, '', '/' + AdURL)
+              $('#ad2').attr("src",AdURL)
+            });
+        });
+      }
+    </script>
   </body>
 </html>
