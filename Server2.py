@@ -17,7 +17,10 @@ def create_server(Config):
         #Technically we don't do anything with this but will need it in later versions
         keywords = request.get_json(force=True)
         #Generate a random bid (Different bidding styles will be added in later versions)
-        offer = random.randint(1,10)
+        if (budget <= 0):
+            offer = -1
+        else:
+            offer = random.randint(1,10)
         print(offer)
         url = ''
         #Required to read the url due to nature of ElementTree
