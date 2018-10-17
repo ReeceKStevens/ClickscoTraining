@@ -61,7 +61,7 @@ def handle_data():
 @app.route('/secondAD', methods=['POST', 'GET'])
 def serve_ad():
     #Initializing variables used in the loop, server names are in a list to save space
-    winner = {'Offer': 0, 'URL': ''}
+    winner = {'Offer': 0, 'URL': '', 'Server': ''}
     Servers = ['ServerA', 'ServerB', 'ServerC', 'ServerD', 'ServerE']
     #Make a request to each server
     for ServerName in Servers:
@@ -74,6 +74,10 @@ def serve_ad():
             #Record the details of our new highest bidder
             winner['Offer'] = ResponseTuple[0]
             winner['URL'] = ResponseTuple[1]
+            winner['Server'] = ResponseTuple[2]
+
+    requests.post (winner['Server'] + '/winner', json = winner['Offer'])
+
     return winner['URL']
 
 #Run the app using werkzeug, this lets us run multiple Flask services simeltaniously
