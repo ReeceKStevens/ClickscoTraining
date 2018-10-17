@@ -8,7 +8,7 @@ from werkzeug.serving import run_simple
 app = Flask(__name__)
 app.debug = True
 #Store the config file for refference later
-configdata = ET.parse('Adverts.config')
+configdata = ET.parse('data/Adverts.config')
 root = configdata.getroot()
 
 def chooseAd(keywords):
@@ -41,6 +41,7 @@ def chooseAd(keywords):
                 match["Value"] = value
     #Return the ad url of the best match
     return match["Ad"]
+
 #Top-level index for this application
 @app.route('/', methods=['POST', 'GET'])
 def handle_data():
@@ -56,19 +57,26 @@ def handle_data():
     #Load the frontend, either with or without an ad
     return render_template('Requests.html', ad1 = response1, words = keywords)
 
+#Secondary route called on page load, does not redirect
 @app.route('/secondAD', methods=['POST', 'GET'])
 def serve_ad():
+    #Initializing variables used in the loop, server names are in a list to save space
+    winner = {'Offer': 0, 'URL': ''}
+    Servers = ['ServerA', 'ServerB', 'ServerC', 'ServerD', 'ServerE']
+    #Make a request to each server
+    for ServerName in Servers:
+        #Post the keyword to the external server & recieve a response
+        Res = requests.post('http://127.0.0.1:5000/'+ ServerName +'/', json = request.form)
+        #Format the response into something we can use
+        ResponseTuple = (Res.text).split()
+        #Compare if this offer is better than the current best offer, both converted to integers for compatibility
+        if int(ResponseTuple[0]) > int(winner['Offer']):
+            #Record the details of our new highest bidder
+            winner['Offer'] = ResponseTuple[0]
+            winner['URL'] = ResponseTuple[1]
+    return winner['URL']
 
-    ServerARes = requests.post('http://127.0.0.1:5000/ServerA/', json = request.form)
-    ServerBRes = requests.post('http://127.0.0.1:5000/ServerB/', json = request.form)
-    ServerCRes = requests.post('http://127.0.0.1:5000/ServerC/', json = request.form)
-    ServerDRes = requests.post('http://127.0.0.1:5000/ServerD/', json = request.form)
-    ServerERes = requests.post('http://127.0.0.1:5000/ServerE/', json = request.form)
-
-
-
-    return 'Something'
-
+#Run the app using werkzeug, this lets us run multiple Flask services simeltaniously
 if __name__ == '__main__':
     run_simple('localhost', 5000, app,
                use_reloader=True, use_debugger=True, use_evalex=True)
