@@ -5,7 +5,7 @@
   <body>
     <h2>Make a request:</h2>
     <!--Basic form to post user input back to server-->
-    <form action="/" method="POST">
+    <form action="" method="POST">
       <input name="keyinput" type="text" class="keywords" placeholder="Enter Keyword"/>
       <input type="submit"/>
     </form>
@@ -19,17 +19,19 @@
     <!--Script required to use jquery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type=text/javascript>
+      //Only trigger this if keywords have been recieved already
       if ('{{words}}' != '') {
         //Function to trigger on page load
         $(function() {
-            $.post('/secondAD',
-            {
-              keywords: '{{words}}'
-            },
-            function(AdURL){
-              history.pushState(null, '', '/' + AdURL)
-              $('#ad2').attr("src",AdURL)
-            });
+          //Send the keywords to the endpoint /secondAD
+          $.post('/secondAD',
+          {
+            keywords: '{{words}}'
+          },
+          //When we recieve a URL response, set it as the source of the second image
+          function(AdURL){
+            $('#ad2').attr("src",AdURL)
+          });
         });
       }
     </script>

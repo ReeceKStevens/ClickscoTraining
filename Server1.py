@@ -1,9 +1,12 @@
 #Importing flask, as well as some additional libraries for enhanced functionality,
 #also import ElementTree so we can parse the config file
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
+import requests
 import xml.etree.ElementTree as ET
+from werkzeug.serving import run_simple
 #Create the app value to allow flask to function
 app = Flask(__name__)
+app.debug = True
 #Store the config file for refference later
 configdata = ET.parse('Adverts.config')
 root = configdata.getroot()
@@ -55,4 +58,17 @@ def handle_data():
 
 @app.route('/secondAD', methods=['POST', 'GET'])
 def serve_ad():
+
+    ServerARes = requests.post('http://127.0.0.1:5000/ServerA/', json = request.form)
+    ServerBRes = requests.post('http://127.0.0.1:5000/ServerB/', json = request.form)
+    ServerCRes = requests.post('http://127.0.0.1:5000/ServerC/', json = request.form)
+    ServerDRes = requests.post('http://127.0.0.1:5000/ServerD/', json = request.form)
+    ServerERes = requests.post('http://127.0.0.1:5000/ServerE/', json = request.form)
+
+
+
     return 'Something'
+
+if __name__ == '__main__':
+    run_simple('localhost', 5000, app,
+               use_reloader=True, use_debugger=True, use_evalex=True)
