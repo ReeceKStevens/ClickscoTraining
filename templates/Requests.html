@@ -1,36 +1,19 @@
 <html>
   <head>
-    <title>Request Client</title>
+    <title>Advertising Request</title>
   </head>
   <body>
     <h2>Make a request:</h2>
+    <!--Basic form to post user input back to server-->
     <form action="" method="POST">
-      <input type="text" class="keywords" placeholder="Enter Keyword"/>
+      <input name="keyinput" type="text" class="keywords" placeholder="Enter Keyword"/>
       <input type="submit"/>
     </form>
-    <div id="advert"></div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-
-    <script type="text/javascript">
-      var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-      socket.on( 'connect', function() {
-        socket.emit( 'connection established')
-        var form = $( 'form' ).on( 'submit', function(e) {
-          e.preventDefault()
-          let keywords = $( 'input.keywords' ).val()
-          socket.emit( 'keywords recieved', {
-            keywords : keywords
-          })
-        })
-      })
-
-      socket.on ( 'my response', function( msg ) {
-        alert(msg);
-        $('#advert').append($('<img>',{src:msg}))
-      })
-    </script>
+    <!--Checks the ad variable, if it is null display a default image, else use the url in ad-->
+    {% if ad %}
+      <img src = {{ ad }} />
+    {% else %}
+      <img src ='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/220px-Good_Food_Display_-_NCI_Visuals_Online.jpg'/>
+    {% endif %}
   </body>
 </html>
