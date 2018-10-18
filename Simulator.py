@@ -1,9 +1,6 @@
-import requests, sched, time, random
+import requests, threading, random
 
-scheduler = sched.scheduler(time.time, time.sleep)
-
-def on_tick(timer):
-
+def on_tick():
     try:
         requests.post('http://127.0.0.1:5000/', json = {'keyinput' : 'Fruit Mango'})
         print('First Ad Request Sucess!')
@@ -20,8 +17,6 @@ def on_tick(timer):
     finally:
         print('')
 
-    scheduler.enter(random.uniform(0.1, 1), 1, on_tick, (scheduler,))
-    return
+    threading.Timer (random.uniform(0.1, 1), on_tick, args = ()).start()
 
-scheduler.enter(random.uniform(0.1, 1), 1, on_tick, (scheduler,))
-scheduler.run()
+threading.Timer (random.uniform(0.1, 1), on_tick, args = ()).start()
