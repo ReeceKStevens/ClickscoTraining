@@ -21,7 +21,6 @@ def create_server(Config):
             offer = -1
         else:
             offer = random.randint(1,10)
-        print(offer)
         url = ''
         #Required to read the url due to nature of ElementTree
         for child in root:

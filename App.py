@@ -13,7 +13,7 @@ application.wsgi_app = DispatcherMiddleware(Server1,{
     '/ServerB': create_server('data/ServerB'),
     '/ServerC': create_server('data/ServerC'),
     '/ServerD': create_server('data/ServerD'),
-    '/ServerE': create_server('data/ServerE')
+    '/ServerE': create_server('data/ServerE'),
 })
 #Starts up all the servers, set to threaded to noticeably increase performance
 #As each server runs on different threads

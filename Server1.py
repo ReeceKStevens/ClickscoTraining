@@ -50,8 +50,12 @@ def handle_data():
     keywords = ""
     #Code block only triggers if page was loaded via form submission
     if request.method == 'POST':
-        #Extract the keywords from the form
-        keywords = request.form['keyinput']
+        try:
+            #Extract the keywords from the form
+            keywords = request.form['keyinput']
+        except:
+            keyjson = request.get_json(force=True)
+            keywords = keyjson['keyinput']
         #Run function to determine best match for keywords provided
         response1 = chooseAd(keywords)
     #Load the frontend, either with or without an ad
@@ -76,7 +80,8 @@ def serve_ad():
             winner['URL'] = ResponseTuple[1]
             winner['Server'] = ResponseTuple[2]
 
-    requests.post (winner['Server'] + '/winner', json = winner['Offer'])
+    if (winner['Server'] != ''):
+        requests.post (winner['Server'] + '/winner', json = winner['Offer'])
 
     return winner['URL']
 
