@@ -62,7 +62,7 @@ def handle_data():
     return render_template('Requests.html', ad1 = response1, words = keywords)
 
 #Secondary route called on page load, does not redirect
-@app.route('/secondAD', methods=['POST', 'GET'])
+@app.route('/secondAD', methods=['POST'])
 def serve_ad():
     #Initializing variables used in the loop, server names are in a list to save space
     winner = {'Offer': 0, 'URL': '', 'Server': ''}
@@ -79,11 +79,25 @@ def serve_ad():
             winner['Offer'] = ResponseTuple[0]
             winner['URL'] = ResponseTuple[1]
             winner['Server'] = ResponseTuple[2]
-
+    #only triggers if there was a winner, trying to make requests to empty
+    #endpoints is un-neccesary operations which we can avoid
     if (winner['Server'] != ''):
+        #Inform the winning server to deduct their budget by the offer amount
         requests.post (winner['Server'] + '/winner', json = winner['Offer'])
-
-    return winner['URL']
+        #Return the second ad url to the frontend
+        return winner['URL']
+    else:
+        wintotal = 0
+        winner = ''
+        print('LEADERBOARD')
+        for ServerName in Servers:
+            wins = requests.post('http://127.0.0.1:5000/'+ ServerName +'/bankrupt')
+            print(ServerName + ' Served ' + wins.text + ' Ads')
+            if (int(wins.text) > wintotal):
+                wintotal = int(wins.text)
+                winner = ServerName
+        print('And the winner is: ' + winner + '!')
+        return ''
 
 #Run the app using werkzeug, this lets us run multiple Flask services simeltaniously
 if __name__ == '__main__':
