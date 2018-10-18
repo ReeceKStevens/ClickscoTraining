@@ -1,6 +1,7 @@
 from flask import Flask, request
 import xml.etree.ElementTree as ET
-import random, math
+import random, math, threading
+from threading import Timer
 #Create the server as a method so that different config files can be sent & it is
 #easier to open multiple server instances
 
@@ -8,7 +9,7 @@ def apply_strategy(Conf, Budget):
     strategies = {
         'random' : rand_strategy,
         'half' : half_strategy,
-        'always one' : always_one_strategy,
+        'always five' : always_five_strategy,
         'always ten' : always_ten_strategy,
         'careful random' : rand_within_budget_strategy
     }
@@ -30,8 +31,8 @@ def half_strategy(Budget):
     offer = math.ceil(baseOffer)
     return offer
 
-def always_one_strategy(Budget):
-    return 1
+def always_five_strategy(Budget):
+    return 5
 
 def always_ten_strategy(Budget):
     return 10
@@ -41,6 +42,12 @@ def rand_within_budget_strategy(Budget):
     return offer
 
 def create_server(Config):
+
+    def topup_budget():
+        nonlocal budget
+        pay = 50
+        budget += pay
+
     app = Flask(__name__)
     app.debug = True
     #Load the config file for this server
@@ -49,6 +56,14 @@ def create_server(Config):
 
     budget = 50
     wins = 0
+    interval = 0
+
+    for child in root:
+        if child.tag == 'interval':
+            interval = child.text
+
+    topupTimer = threading.Timer (int(interval), topup_budget, args = ())
+    topupTimer.start()
 
     @app.route('/', methods=['POST'])
     def make_bid():

@@ -17,4 +17,6 @@ application.wsgi_app = DispatcherMiddleware(Server1,{
 })
 #Starts up all the servers, set to threaded to noticeably increase performance
 #As each server runs on different threads
-Server1.run(threaded=True)
+
+if __name__ == '__main__':
+    Server1.run(threaded=True)
