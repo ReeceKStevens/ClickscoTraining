@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>Server{{ server }} Status</title>
+  </head>
+  <body>
+    <h3>This Server has Posted <div id = "Wins"></div> Ads<h3/>
+    <h3>Server Strategy: <div id = "Strategy"></div></h3>
+    <h3>Server Budget: <div id = "Budget"></div><h3/>
+    <h3>Topping Up Every <div id = "Interval"></div> Seconds</h3>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type=text/javascript>
+    setInterval(function updatePage(){
+      $.post('http://127.0.0.1:5000/Server{{ server }}/update',
+      //When we recieve a URL response, set it as the source of the second image
+      function(res){
+        var formattedResponse = res.split(",");
+        $('#Wins').text(formattedResponse[0]),
+        $('#Strategy').text(formattedResponse[1]),
+        $('#Budget').text(formattedResponse[2]),
+        $('#Interval').text(formattedResponse[3])
+      });
+    }, 1000);
+  </script>
+</html>

@@ -86,10 +86,14 @@ def serve_ad():
         requests.post (winner['Server'] + '/winner', json = winner['Offer'])
         #Return the second ad url to the frontend
         return winner['URL']
+    #Trigger when all servers are bankrupt so we can declare a winner
     else:
+        #Initialize variables outside of loop
         wintotal = 0
         winner = ''
         print('LEADERBOARD')
+        #Loop through each server, asking for their wins and keeping track
+        #of only the current highest wins, then print the winner
         for ServerName in Servers:
             wins = requests.post('http://127.0.0.1:5000/'+ ServerName +'/bankrupt')
             print(ServerName + ' Served ' + wins.text + ' Ads')
