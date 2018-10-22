@@ -87,6 +87,7 @@ def create_server(Config):
     budget = 50
     wins = 0
     interval = 0
+    offers = []
     #Check the interval of payment listed in the configuration file
     for child in root:
         if child.tag == 'interval':
@@ -118,6 +119,7 @@ def create_server(Config):
         #Nonlocal used so that budget will be retained on this instance of the server
         nonlocal budget
         nonlocal wins
+        nonlocal offers
         #Recieve the overall cost of our bid from the request
         cost = request.get_json(force=True)
         #Subtract the cost of this bid from the budget
@@ -125,6 +127,7 @@ def create_server(Config):
         wins += 1
         #Quality of life server info, allows accurate knowledge of server budget
         print('Winner is Server' + Config[-1:] + ', remaining budget is ' + str(budget) + 'p')
+        Offers.append(cost)
         #Return null as Flask does not like return on it's own
         return ''
 
@@ -144,7 +147,7 @@ def create_server(Config):
             if child.tag == 'Strategy':
                 chosenstrat = child.text
 
-        res = (str(wins) + ', ' + chosenstrat + ', ' + str(budget) + ', ' +interval)
+        res = (str(wins) + ',' + chosenstrat + ',' + str(budget) + ',' +interval)
 
         return res
 

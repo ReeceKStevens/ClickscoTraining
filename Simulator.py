@@ -1,5 +1,6 @@
 import requests, random
 from threading import Timer
+
 #Boilerplate code for threaded timer which repeats function on it's own thread
 class RepeatedTimer(object):
     def __init__(self, interval, function, *args, **kwargs):
@@ -22,6 +23,7 @@ class RepeatedTimer(object):
             self._timer.start()
             self.is_running = True
 
+#Function to execute on each timer tick
 def on_tick():
     #Each request is wrapped in a try block in case of connection failure
     try:
@@ -36,6 +38,7 @@ def on_tick():
         print('')
 
     try:
+        #Posts a request to secondAD endpoint
         requests.post('http://127.0.0.1:5000/secondAD', json = {'keywords' : 'Fruit Mango'})
         print('Second Ad Request Success!')
     except Exception as err:
