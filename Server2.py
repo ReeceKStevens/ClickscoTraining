@@ -149,6 +149,10 @@ def create_server(Config):
 
         res = (str(wins) + ',' + chosenstrat + ',' + str(budget) + ',' +interval)
 
+        for offer in offers:
+            res += ','
+            res += offer
+
         return res
 
     return app

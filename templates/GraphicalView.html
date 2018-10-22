@@ -11,7 +11,30 @@
     <h3>Server Strategy: <span id = "Strategy"></span></h3>
     <h3>Server Funds: <span id = "Budget"></span>p<h3/>
     <h3>Topping Up Every <span id = "Interval"></span> Seconds</h3>
+    <canvas id="myChart" width="100" height="100"></canvas>
   </body>
+  <script src="{{ url_for('static', filename='node_modules/chart.js/dist/Chart.js') }}"></script>
+  <script>
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data:{
+          labels:[],
+          datasets: [{
+            data: []
+          }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+  </script>
   <!-- Source for jquery scripts -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type=text/javascript>
@@ -28,6 +51,13 @@
         $('#Strategy').text(formattedResponse[1]),
         $('#Budget').text(formattedResponse[2]),
         $('#Interval').text(formattedResponse[3])
+        var i;
+        var offers = formattedResponse. slice(4);
+        for (i = 0; i < offers.length; i++) {
+          myChart.data.labels[i] = ("Bid #" + String(i+1));
+          myChart.data.datasets[0].data[i] = offers[i];
+        }
+        myChart.update();
       });
     }, 1000);
   </script>
