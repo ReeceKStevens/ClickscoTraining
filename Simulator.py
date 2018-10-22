@@ -1,5 +1,4 @@
-import requests, random
-from threading import Timer
+import requests
 
 #Boilerplate code for threaded timer which repeats function on it's own thread
 class RepeatedTimer(object):
@@ -46,4 +45,5 @@ def on_tick():
     finally:
         print('')
 #Start timer with a random interval between 0.1 and 1 second
-simulatorTimer = RepeatedTimer(random.uniform(0.1, 1), on_tick)
+for x in range(120):
+    on_tick()

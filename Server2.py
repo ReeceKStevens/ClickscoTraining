@@ -127,7 +127,7 @@ def create_server(Config):
         wins += 1
         #Quality of life server info, allows accurate knowledge of server budget
         print('Winner is Server' + Config[-1:] + ', remaining budget is ' + str(budget) + 'p')
-        Offers.append(cost)
+        offers.append(cost)
         #Return null as Flask does not like return on it's own
         return ''
 
