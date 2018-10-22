@@ -24,21 +24,24 @@ def chooseAd(keywords):
     match = {"Ad": "", "Value": 0}
     #Iterate through each keyword in the config file
     for child in root:
-        #Trigger if we find a keyword which exists in our inputs
-        if child.attrib['name'] in keywordLower:
-            value = ""
-            ad = ""
-            #Check each attribute in the keyword to collect it's value and ad
-            for attribute in child:
-                if attribute.tag == 'value':
-                    value = attribute.text
-                if attribute.tag == "ad":
-                    ad = attribute.text
-            #If the value of the match is higher than previous matches,
-            #store it as the new best match (Value starts at 0)
-            if int(value) > int(match["Value"]):
-                match["Ad"] = ad
-                match["Value"] = value
+        #Loop through each keyword in the input
+        for keyword in keywordLower:
+            #Check the keyword for partial (Substring) matches but will also
+            #Match exactly
+            if keyword in child.attrib['name']:
+                value = ""
+                ad = ""
+                #Check each attribute in the keyword to collect it's value and ad
+                for attribute in child:
+                    if attribute.tag == 'value':
+                        value = attribute.text
+                    if attribute.tag == "ad":
+                        ad = attribute.text
+                #If the value of the match is higher than previous matches,
+                #store it as the new best match (Value starts at 0)
+                if int(value) > int(match["Value"]):
+                    match["Ad"] = ad
+                    match["Value"] = value
     #Return the ad url of the best match
     return match["Ad"]
 

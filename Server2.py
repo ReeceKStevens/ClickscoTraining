@@ -2,8 +2,29 @@ from flask import Flask, request, render_template
 import xml.etree.ElementTree as ET
 import random, math, threading
 from threading import Timer
-#Create the server as a method so that different config files can be sent & it is
-#easier to open multiple server instances
+
+#Boilerplate code for a threaded, repeating timer which executes a method
+#On a different thread
+class RepeatedTimer(object):
+    def __init__(self, interval, function, *args, **kwargs):
+        self._timer     = None
+        self.interval   = interval
+        self.function   = function
+        self.args       = args
+        self.kwargs     = kwargs
+        self.is_running = False
+        self.start()
+
+    def _run(self):
+        self.is_running = False
+        self.start()
+        self.function(*self.args, **self.kwargs)
+
+    def start(self):
+        if not self.is_running:
+            self._timer = Timer(self.interval, self._run)
+            self._timer.start()
+            self.is_running = True
 
 #Picks out a function to execure based on server's config
 def apply_strategy(Conf, Budget):
@@ -48,13 +69,14 @@ def rand_within_budget_strategy(Budget):
     offer = random.randint(1,Budget)
     return offer
 
+#Create the server as a method so that different config files can be sent & it is
+#easier to open multiple server instances
 def create_server(Config):
     #Add on 50p to server budget, declared within create_server as a Nonlocal
     #variable is needed
     def topup_budget():
         nonlocal budget
-        pay = 50
-        budget += pay
+        budget = 50
     #Initialize flask
     app = Flask(__name__)
     app.debug = True
@@ -71,8 +93,7 @@ def create_server(Config):
             interval = child.text
     #Initialize a timer to execute the topup function
     # after a number of seconds equal to the interval
-    topupTimer = threading.Timer (int(interval), topup_budget, args = ())
-    topupTimer.start()
+    topuptimer = RepeatedTimer(int(interval), topup_budget)
 
     @app.route('/', methods=['POST'])
     def make_bid():
@@ -118,7 +139,6 @@ def create_server(Config):
 
     @app.route('/update', methods=['POST'])
     def update_view():
-        print('Talked to the updater')
         consenstrat = ''
         for child in root:
             if child.tag == 'Strategy':

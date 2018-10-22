@@ -1,11 +1,37 @@
-import requests, threading, random
+import requests, random
+from threading import Timer
+
+class RepeatedTimer(object):
+    def __init__(self, interval, function, *args, **kwargs):
+        self._timer     = None
+        self.interval   = interval
+        self.function   = function
+        self.args       = args
+        self.kwargs     = kwargs
+        self.is_running = False
+        self.start()
+
+    def _run(self):
+        self.is_running = False
+        self.start()
+        self.function(*self.args, **self.kwargs)
+
+    def start(self):
+        if not self.is_running:
+            self._timer = Timer(self.interval, self._run)
+            self._timer.start()
+            self.is_running = True
 
 def on_tick():
+    #Each request is wrapped in a try block in case of connection failure
     try:
+        #Try posting a keyword request for Ad 1
         requests.post('http://127.0.0.1:5000/', json = {'keyinput' : 'Fruit Mango'})
         print('First Ad Request Sucess!')
+    #If connection fails then provide error message and continue
     except Exception as err:
         print('Failure, ' + str(err))
+    #Line break for readability
     finally:
         print('')
 
@@ -17,6 +43,4 @@ def on_tick():
     finally:
         print('')
 
-    threading.Timer (random.uniform(0.1, 1), on_tick, args = ()).start()
-
-threading.Timer (random.uniform(0.1, 1), on_tick, args = ()).start()
+simulatorTimer = RepeatedTimer(random.uniform(0.1, 1), on_tick)

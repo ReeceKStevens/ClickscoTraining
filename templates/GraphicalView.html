@@ -1,20 +1,28 @@
 <html>
   <head>
+    <!--Variable title based on server, will display current server-->
     <title>Server{{ server }} Status</title>
   </head>
   <body>
-    <h3>This Server has Posted <div id = "Wins"></div> Ads<h3/>
-    <h3>Server Strategy: <div id = "Strategy"></div></h3>
-    <h3>Server Budget: <div id = "Budget"></div><h3/>
-    <h3>Topping Up Every <div id = "Interval"></div> Seconds</h3>
+    <!--Spans have been embeded within headings so that information can be injected
+    later, span used over div to prevent new line on content-->
+    <h3>This Server has Posted <span id = "Wins"></span> Ads<h3/>
+    <h3>Server Strategy: <span id = "Strategy"></span></h3>
+    <h3>Server Budget: <span id = "Budget"></span>p<h3/>
+    <h3>Topping Up Every <span id = "Interval"></span> Seconds</h3>
   </body>
+  <!-- Source for jquery scripts -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type=text/javascript>
+    //Poll request runs on a 1 second interval to keep constant updates
     setInterval(function updatePage(){
+      //Post uses server variable to determine correct server to post to
       $.post('http://127.0.0.1:5000/Server{{ server }}/update',
       //When we recieve a URL response, set it as the source of the second image
       function(res){
+        //response is recieved as string, split it back into list
         var formattedResponse = res.split(",");
+        //set span elements using post response
         $('#Wins').text(formattedResponse[0]),
         $('#Strategy').text(formattedResponse[1]),
         $('#Budget').text(formattedResponse[2]),
