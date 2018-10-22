@@ -47,9 +47,9 @@ def chooseAd(keywords):
 
 #Top-level index for this application
 @app.route('/', methods=['POST', 'GET'])
-def handle_data():
+def handle_request():
     error = None
-    response1 = ""
+    res = ""
     keywords = ""
     #Code block only triggers if page was loaded via form submission
     if request.method == 'POST':
@@ -60,9 +60,9 @@ def handle_data():
             keyjson = request.get_json(force=True)
             keywords = keyjson['keyinput']
         #Run function to determine best match for keywords provided
-        response1 = chooseAd(keywords)
+        res = chooseAd(keywords)
     #Load the frontend, either with or without an ad
-    return render_template('Requests.html', ad1 = response1, words = keywords)
+    return render_template('Requests.html', ad1 = res, words = keywords)
 
 #Secondary route called on page load, does not redirect
 @app.route('/secondAD', methods=['POST'])

@@ -1,5 +1,7 @@
 import unittest
+import xml.etree.ElementTree as ET
 from Server1 import chooseAd
+from Server2 import apply_strategy
 
 class TestAdSelection(unittest.TestCase):
 
@@ -26,6 +28,23 @@ class TestAdSelection(unittest.TestCase):
     def test_noinput(self):
         keywords = ''
         self.assertEqual(chooseAd(keywords), '')
+
+class TestServerTwo(unittest.TestCase):
+
+    def test_Half(self):
+        configdata = ET.parse('data/ServerB.config')
+        root = configdata.getroot()
+        self.assertEqual(apply_strategy(root, 50), 25)
+
+    def test_five(self):
+        configdata = ET.parse('data/ServerC.config')
+        root = configdata.getroot()
+        self.assertEqual(apply_strategy(root, 50), 5)
+
+    def test_ten(self):
+        configdata = ET.parse('data/ServerD.config')
+        root = configdata.getroot()
+        self.assertEqual(apply_strategy(root, 50), 10)
 
 if __name__=='__main__':
     unittest.main()
