@@ -11,7 +11,7 @@
     <h3>Server Strategy: <span id = "Strategy"></span></h3>
     <h3>Server Funds: <span id = "Budget"></span>p<h3/>
     <h3>Topping Up Every <span id = "Interval"></span> Seconds</h3>
-    <canvas id="myChart" width="100" height="100"></canvas>
+    <canvas id="myChart" width=500 height=450></canvas>
   </body>
   <script src="{{ url_for('static', filename='node_modules/chart.js/dist/Chart.js') }}"></script>
   <script>
@@ -21,13 +21,17 @@
         data:{
           labels:[],
           datasets: [{
+            label: 'Winning Bid',
             data: []
           }]
         },
         options: {
+            responsive: false,
+            maintainAspectRatio: false,
             scales: {
                 yAxes: [{
                     ticks: {
+                        max: 50,
                         beginAtZero:true
                     }
                 }]
