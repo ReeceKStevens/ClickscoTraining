@@ -137,21 +137,24 @@ def create_server(Config):
 
     @app.route('/view', methods=['POST','GET'])
     def get_page():
+        #Load a page for this server and tell it what server it is attached to
+        #It only needs the server letter so that's all we send
         nonlocal Config
         return render_template('GraphicalView.html', server = Config[-1:])
 
     @app.route('/update', methods=['POST'])
     def update_view():
+        #Get the name of the chosen strategy from the config file
         consenstrat = ''
         for child in root:
             if child.tag == 'Strategy':
                 chosenstrat = child.text
-
+        #requests is very particular about return type, so I bodged allow
+        #the return data into a string that we can split on the other end
         res = (str(wins) + ',' + chosenstrat + ',' + str(budget) + ',' +interval)
-
+        #Add each offer onto the end of the return string
         for offer in offers:
-            res += ','
-            res += offer
+            res += (','+ offer)
 
         return res
 

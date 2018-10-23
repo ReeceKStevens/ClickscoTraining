@@ -5,12 +5,14 @@
     <title>Server{{ server }} Status</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Importing all required dependencies for bootstrap & jquery-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   </head>
   <body>
+    <!--Create navigation bar to hold links to other pages-->
     <nav class="navbar navbar-expand-sm bg-light">
       <!-- Links -->
       <ul class="navbar-nav">
@@ -34,7 +36,7 @@
         </li>
       </ul>
     </nav>
-
+    <!--Content is wrapped in a container to center it and give it a responsive position on screen-->
     <div class="container">
       <!--Spans have been embeded within headings so that information can be injected
       later, span used over div to prevent new line on content-->
@@ -56,8 +58,12 @@
       <canvas id="myChart"></canvas>
     </div>
   </body>
+  <!--Static reference to JS module, this allows the module to be found on the Server
+  regardless of where we are searching from-->
   <script src="{{ url_for('static', filename='node_modules/chart.js/dist/Chart.js') }}"></script>
   <script>
+    //JS to create a chart within the canvas element, some variables are set now
+    //but data is assigned programatically later
     var ctx = document.getElementById("myChart");
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -69,7 +75,6 @@
           }]
         },
         options: {
-            //responsive: false,
             maintainAspectRatio: false,
             scales: {
                 yAxes: [{
@@ -82,7 +87,7 @@
         }
     });
   </script>
-  <!-- Source for jquery scripts -->
+  <!--Script to constantly poll the server for new information-->
   <script type=text/javascript>
     //Poll request runs on a 1 second interval to keep constant updates
     setInterval(function updatePage(){
@@ -97,12 +102,15 @@
         $('#Strategy').text(formattedResponse[1]),
         $('#Budget').text(formattedResponse[2]),
         $('#Interval').text(formattedResponse[3])
+        //go through the rest of the information as we can safely assume
+        //it is data of bids & add it to the chart
         var i;
         var offers = formattedResponse. slice(4);
         for (i = 0; i < offers.length; i++) {
           myChart.data.labels[i] = ("Bid #" + String(i+1));
           myChart.data.datasets[0].data[i] = offers[i];
         }
+        //Apply the changes to the chart
         myChart.update();
       });
     }, 1000);

@@ -23,13 +23,19 @@ def req_2():
         print('Failure, ' + str(err))
     finally:
         print('')
-#Start timer with a random interval between 0.1 and 1 second
+
+#Run Forever
 while 1:
+    #Repeat 120 times, just an arbitrary number
     for x in range(120):
+        #Open up two new threads and place the requests using that thread1
+        #This should allow us to throw out new requests before the previous
+        #One is even handled, which could theoretically overload the server
         thread1 = Thread(target = req_1)
         thread2 = Thread(target = req_2)
         thread1.start()
         thread2.start()
         thread1.join()
         thread2.join()
+    #Start a new batch of requests in 5-30 seconds
     time.sleep(random.randint(5, 30))
