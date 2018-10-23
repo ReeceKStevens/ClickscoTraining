@@ -1,23 +1,57 @@
-<html>
+<!DOCTYPE html>
+<html lan="en">
   <head>
     <title>Advertising Request</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <h2>Make a request:</h2>
-    <!--Basic form to post user input back to server-->
-    <form action="" method="POST">
-      <input name="keyinput" type="text" class="keywords" placeholder="Enter Keyword"/>
-      <input type="submit"/>
-    </form>
-    <!--Checks the ad variable, if it is null display a default image, else use the url in ad-->
-    {% if ad1 %}
-      <img height = 100 width = 100 src = {{ ad1 }} />
-    {% else %}
-      <img height = 100 width = 100 src ='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/220px-Good_Food_Display_-_NCI_Visuals_Online.jpg'/>
-    {% endif %}
-    <img height = 100 width = 100 id = "ad2"/>
-    <!--Script required to use jquery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <nav class="navbar navbar-expand-sm bg-light">
+      <!-- Links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="http://127.0.0.1:5000/#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://127.0.0.1:5000/ServerA/view">Server A</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://127.0.0.1:5000/ServerB/view">Server B</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://127.0.0.1:5000/ServerC/view">Server C</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://127.0.0.1:5000/ServerD/view">Server D</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://127.0.0.1:5000/ServerE/view">Server E</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container">
+      <h2>Make a request:</h2>
+      <!--Basic form to post user input back to server-->
+      <form action="" method="POST">
+        <div class="form-group">
+          <label for="keyinput">Keywords:</label>
+          <input name="keyinput" type="text" class="form-control"/>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+      </form>
+      <!--Checks the ad variable, if it is null display a default image, else use the url in ad-->
+      {% if ad1 %}
+        <img src = {{ ad1 }} class="rounded float-left" width=45% style="padding-top: 20px;"/>
+      {% else %}
+        <img src ='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/220px-Good_Food_Display_-_NCI_Visuals_Online.jpg' class="rounded float-left" width=45% style="padding-top: 20px;"/>
+      {% endif %}
+      <img id = "ad2" class="rounded float-right" width=45% style="padding-top: 20px;"/>
+    </div>
     <script type=text/javascript>
       //Only trigger this if keywords have been recieved already
       if ('{{words}}' != '') {
