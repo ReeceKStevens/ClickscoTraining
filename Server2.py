@@ -98,6 +98,7 @@ def create_server(Config):
 
     @app.route('/', methods=['POST'])
     def make_bid():
+        nonlocal offers
         #Technically we don't do anything with this but will need it in later versions
         keywords = request.get_json(force=True)
         #Generate a random bid (Different bidding styles will be added in later versions)
@@ -112,6 +113,9 @@ def create_server(Config):
                 url = child.text
         #Format the offer into a string as requests only allows a few data types
         res = (str(offer) + ' ' + url + ' ' + request.base_url)
+        if (offer > -1):
+            offers.append(str(offer))
+            offers.append("False")
         return res
 
     @app.route('/winner', methods=['POST'])
@@ -125,9 +129,10 @@ def create_server(Config):
         #Subtract the cost of this bid from the budget
         budget -= int(cost)
         wins += 1
+        offers[-1] = "True"
+        print(str(offers))
         #Quality of life server info, allows accurate knowledge of server budget
         print('Winner is Server' + Config[-1:] + ', remaining budget is ' + str(budget) + 'p')
-        offers.append(cost)
         #Return null as Flask does not like return on it's own
         return ''
 

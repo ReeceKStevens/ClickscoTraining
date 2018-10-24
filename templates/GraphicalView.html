@@ -70,8 +70,14 @@
         data:{
           labels:[],
           datasets: [{
+            label: 'Bid',
+            data: [],
+            backgroundColor: 	['rgba(0, 0, 200, 0.5)']
+          },
+          {
             label: 'Winning Bid',
-            data: []
+            data: [],
+            backgroundColor: ['rgba(200, 0, 0, 0.5)']
           }]
         },
         options: {
@@ -106,9 +112,19 @@
         //it is data of bids & add it to the chart
         var i;
         var offers = formattedResponse. slice(4);
-        for (i = 0; i < offers.length; i++) {
-          myChart.data.labels[i] = ("Bid #" + String(i+1));
-          myChart.data.datasets[0].data[i] = offers[i];
+        for (i = 0; i < offers.length; i += 2) {
+          bidNo = Math.ceil((i+1)/2);
+          myChart.data.labels[i] = ("Bid #" + String(bidNo));
+          console.log(offers[i+1]);
+          if (offers[i+1] == "False"){
+            myChart.data.datasets[0].data[i] = offers[i];
+            myChart.data.datasets[0].backgroundColor[i] = 'rgba(0, 0, 200, 0.5)';
+          }
+          else if (offers[i+1] == "True"){
+            console.log('Ping');
+            myChart.data.datasets[1].data[i] = offers[i];
+            myChart.data.datasets[1].backgroundColor[i] = 'rgba(200, 0, 0, 0.5)';
+          }
         }
         //Apply the changes to the chart
         myChart.update();
